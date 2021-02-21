@@ -140,7 +140,7 @@ def add_to_chain():
     payload = req.get("payload")
     previous_hash = req.get("previous_hash")
 
-    new_block = Block(index=last_block.index + 1,
+    new_block = Block(index= len(blockchain.chain) + 1,
                       transactions=transactions,
                       timestamp=time.time(),
                       previous_hash=previous_hash,
@@ -149,9 +149,7 @@ def add_to_chain():
     proof = blockchain.proof_of_work(new_block)
     blockchain.add_block(new_block, proof)
 
-    return json.dumps({"payload": new_block.payload,
-                       "transaction": new_block.transactions,
-                       "previous_hash": new_block.previous_hash,})
+    return json.dumps(new_block)
 
 # In[45]:
 
