@@ -130,6 +130,7 @@ def get_chain():
     chain_data = []
     for block in blockchain.chain:
         chain_data.append(block.__dict__)
+
     return json.dumps({"length": len(chain_data),
                        "chain": chain_data})
 
@@ -140,7 +141,9 @@ def add_to_chain():
     payload = req.get("payload")
     previous_hash = req.get("previous_hash")
 
-    new_block = Block(index= len(blockchain.chain) + 1,
+    previous_block = blockchain.last_block
+
+    new_block = Block(index=previous_block.index + 1,
                       transactions=transactions,
                       timestamp=time.time(),
                       previous_hash=previous_hash,
@@ -149,8 +152,14 @@ def add_to_chain():
     proof = blockchain.proof_of_work(new_block)
     blockchain.add_block(new_block, proof)
 
-    return json.dumps(new_block)
+    chain_data = []
+    for block in blockchain.chain:
+        chain_data.append(block.__dict__)
 
+    return json.dumps({"length": len(chain_data),
+                       "chain": chain_data})
+
+    return json.dumps(chain_data)
 # In[45]:
 
 
